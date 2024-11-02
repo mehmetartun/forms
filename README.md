@@ -11,5 +11,63 @@ flutter create . --org com.artun
 ```
 and we remove the counter and floating action button to have an empty page in the start.
 
+## Tag 2.0.0
+In this part we add a simple form with a `TextFormField`. 
+
+
+### The Map containing the values of all form fields
+To populate the formfield we first initialize a `Map` named `formValues` to contain the initial values of the form. 
+
+This `Map` can come from the `toMap()` function of a data object, like for example a `User()` class with multiple properties such as `displayName`, `firstName`, `lastName`, `dob`, etc. More on this later.
+```dart
+  Map<String, dynamic> formValues = {};
+  ...
+  @override
+  void initState() {
+    formValues["name"] = "John Doe";
+    super.initState();
+  }
+```
+
+### The TextFormField
+In the `TextFormField` we use these initialized values as:
+```dart
+    TextFormField(
+        initialValue: formValues["name"],
+        decoration: const InputDecoration(
+            labelText: "Name",
+        ),
+        onSaved: (value) {
+            formValues["name"] = value;
+        },
+        validator: (value) {
+            if (value == null || value.isEmpty) {
+            return "This field cannot be empty";
+            }
+            return null;
+        },
+    ),
+```
+Here we note that `onSaved()` method simply updates the `name` property of the `formValues` object. `validator()` on the other hand returns a `String` when the value is empty or null, and returns `null` otherwise, equivalent to saying the validation has passed.
+
+### Submitting the form
+For submitting the form we implement a `FilledButton` where validation and if successful, the subsequent submission occurs here.
+```dart
+    FilledButton(
+    onPressed: () {
+        if (_formKey.currentState?.validate() ?? false) {
+        _formKey.currentState?.save();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(
+            content: Text("name: ${formValues['name']}"),
+        ));
+        }
+    },
+    child: Text("Submit"),
+    )
+```
+Once saved, we can then access the `formValues` map to display the **updated** value which is done in the `showSnackBar` step. 
+
+
 
 
