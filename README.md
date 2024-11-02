@@ -12,8 +12,13 @@ flutter create . --org com.artun
 and we remove the counter and floating action button to have an empty page in the start.
 
 ## Tag 2.0.0
-In this part we add a simple form with a `TextFormField`. 
+In this part we add a simple form with a `TextFormField`. The following slides give an overview of the structure of the form and below we see the implementation
 
+![Overview of a Form](/assets/illustrations/Forms-flow1.png)
+
+![Initialization](/assets/illustrations/Forms-flow2.png)
+
+![Basic Operation](/assets/illustrations/Forms-flow3.png)
 
 ### The Map containing the values of all form fields
 To populate the formfield we first initialize a `Map` named `formValues` to contain the initial values of the form. 
