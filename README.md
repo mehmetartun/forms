@@ -14,11 +14,11 @@ and we remove the counter and floating action button to have an empty page in th
 ## Tag 2.0.0
 In this part we add a simple form with a `TextFormField`. The following slides give an overview of the structure of the form and below we see the implementation
 
-![Overview of a Form](/assets/illustrations/Forms in Flutter-2.png)
+![Overview of a Form](/assets/illustrations/Forms2.png)
 
-![Initialization](/assets/illustrations/Forms in Flutter-3.png)
+![Initialization](/assets/illustrations/Forms3.png)
 
-![Basic Operation](/assets/illustrations/Forms in Flutter-4.png)
+![Basic Operation](/assets/illustrations/Forms4.png)
 
 ### The Map containing the values of all form fields
 To populate the formfield we first initialize a `Map` named `formValues` to contain the initial values of the form. 
