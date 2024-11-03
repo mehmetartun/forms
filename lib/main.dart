@@ -30,12 +30,15 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+const toppings = ["Pepperoni", "Ham", "Vegeterian", "Four Seasons"];
+
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> formValues = {};
-  GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   @override
   void initState() {
     formValues["name"] = "John Doe";
+    formValues["topping"] = "Pepperoni";
     super.initState();
   }
 
@@ -50,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Form(
                 key: _formKey,
                 child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(50.0),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -69,17 +72,55 @@ class _MyHomePageState extends State<MyHomePage> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
+                          DropdownButtonFormField<String>(
+                              focusColor: Colors.blue,
+                              decoration:
+                                  const InputDecoration(labelText: "Topping"),
+                              value: "Pepperoni",
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Please select a value";
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                formValues['topping'] = value;
+                              },
+                              isExpanded: true,
+                              selectedItemBuilder: (context) {
+                                return toppings.map((topping) {
+                                  return Text(topping);
+                                }).toList();
+                              },
+                              items: toppings.map((topping) {
+                                return DropdownMenuItem<String>(
+                                    value: topping,
+                                    child: Text(
+                                      topping,
+                                      style: formValues['topping'] == topping
+                                          ? TextStyle(color: Colors.blue)
+                                          : null,
+                                    ));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  formValues['topping'] = value;
+                                });
+                              }),
+                          const SizedBox(height: 20),
                           FilledButton(
                             onPressed: () {
                               if (_formKey.currentState?.validate() ?? false) {
                                 _formKey.currentState?.save();
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
-                                  content: Text("name: ${formValues['name']}"),
+                                  content: Text("name: ${formValues['name']} "
+                                      "topping: ${formValues['topping']}"),
                                 ));
                               }
                             },
-                            child: Text("Submit"),
+                            child: const Text("Submit"),
                           )
                         ])))));
   }
