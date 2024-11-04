@@ -5,8 +5,8 @@ for editing objects, creating custom `FormField` widgets and expooring
 some of the things to pay attention to when dealing with forms.
 
 # Contents
-[Tag 1.0.0](https://github.com/mehmetartun/forms/tree/1.0.0) Start - empty Flutter project
-[Tag 2.0.0](https://github.com/mehmetartun/forms/tree/2.0.0) Implement simple TextFormField
+1. [Tag 1.0.0](https://github.com/mehmetartun/forms/tree/1.0.0) Start - empty Flutter project
+2. [Tag 2.0.0](https://github.com/mehmetartun/forms/tree/2.0.0) Implement simple TextFormField
 
 ## Tag 2.0.0
 In this part we add a simple form with a `TextFormField`. The following slides give an overview of the structure of the form and below we see the implementation
