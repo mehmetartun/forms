@@ -32,6 +32,17 @@ class MyHomePage extends StatefulWidget {
 
 const toppings = ["Pepperoni", "Ham", "Vegeterian", "Four Seasons"];
 
+enum Gender {
+  male(description: "Male"),
+  female(description: "Female"),
+  transGender(description: "Transgender"),
+  nonBinary(description: "Non-binary"),
+  preferNoToSay(description: "Prefer not to say");
+
+  final String description;
+  const Gender({required this.description});
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> formValues = {};
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -39,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     formValues["name"] = "John Doe";
     formValues["topping"] = "Pepperoni";
+    formValues["gender"] = Gender.preferNoToSay;
     super.initState();
   }
 
@@ -55,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Padding(
                     padding: const EdgeInsets.all(50.0),
                     child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           TextFormField(
@@ -74,10 +87,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           const SizedBox(height: 20),
                           DropdownButtonFormField<String>(
-                              focusColor: Colors.blue,
                               decoration:
                                   const InputDecoration(labelText: "Topping"),
-                              value: "Pepperoni",
+                              value: formValues['topping'],
                               validator: (value) {
                                 if (value == null) {
                                   return "Please select a value";
@@ -108,6 +120,40 @@ class _MyHomePageState extends State<MyHomePage> {
                                   formValues['topping'] = value;
                                 });
                               }),
+                          DropdownButtonFormField<Gender>(
+                              decoration:
+                                  const InputDecoration(labelText: "Gender"),
+                              value: formValues['gender'],
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Please select a value";
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                formValues['gender'] = value;
+                              },
+                              // isExpanded: true,
+                              selectedItemBuilder: (context) {
+                                return Gender.values.map((gender) {
+                                  return Text(gender.description);
+                                }).toList();
+                              },
+                              items: Gender.values.map((gender) {
+                                return DropdownMenuItem<Gender>(
+                                    value: gender,
+                                    child: Text(
+                                      gender.description,
+                                      style: formValues['gender'] == gender
+                                          ? TextStyle(color: Colors.blue)
+                                          : null,
+                                    ));
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  formValues['gender'] = value;
+                                });
+                              }),
                           const SizedBox(height: 20),
                           FilledButton(
                             onPressed: () {
@@ -116,7 +162,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("name: ${formValues['name']} "
-                                      "topping: ${formValues['topping']}"),
+                                      "topping: ${formValues['topping']} "
+                                      "gender: ${(formValues['gender'] as Gender).description} "),
                                 ));
                               }
                             },
