@@ -7,92 +7,69 @@ some of the things to pay attention to when dealing with forms.
 # Contents
 1. [Tag 1.0.0](https://github.com/mehmetartun/forms/tree/1.0.0) Start - empty Flutter project
 2. [Tag 2.0.0](https://github.com/mehmetartun/forms/tree/2.0.0) Implement simple **TextFormField**
-3. [Tag 3.0.0](https://github.com/mehmetartun/forms/tree/2.0.0) Implement a **DropdownButtonFormField**
+3. [Tag 3.0.0](https://github.com/mehmetartun/forms/tree/3.0.0) Implement a **DropdownButtonFormField**
+4. [Tag 4.0.0](https://github.com/mehmetartun/forms/tree/4.0.0) Using `enum` classes
 
-## Tag 3.0.0
 
-Here we will implement a `DropdownButtonFormField`. For this purpose we will create an `enum` and choose the values of the `enum`.
+## Tag 4.0.0
 
-![Simple Implementation](/assets/illustrations/Forms5.png)
+It is much better practice to use `enum` classes in conjunction with the `DropdownButtonFormField`.
 
-![Formatting](/assets/illustrations/Forms6.png)
+### Gender field in the form
 
-### Simple Implementation
-
-We start by defining a list of values
+In this example we create a new `enum` called `Gender`
 ```dart
-const toppings = ["Pepperoni", "Ham", "Vegeterian", "Four Seasons"];
+enum Gender {
+  male(description: "Male"),
+  female(description: "Female"),
+  transGender(description: "Transgender"),
+  nonBinary(description: "Non-binary"),
+  preferNoToSay(description: "Prefer not to say");
+
+  final String description;
+  const Gender({required this.description});
+}
 ```
+where aside from the `enum` values, we also store the `description` which is how we would display this `enum` in our dropdown.
 
-And then we insert the `FormField` widget just like the `TextFormField`.
+The implementation of the `DropdownButtonFormField` then becomes:
 ```dart
-    DropdownButtonFormField<String>(
-        focusColor: Colors.blue,
+    DropdownButtonFormField<Gender>(
         decoration:
-            const InputDecoration(labelText: "Topping"),
-        value: "Pepperoni",
+            const InputDecoration(labelText: "Gender"),
+        value: formValues['gender'],
         validator: (value) {
-        if (value == null) {
+          if (value == null) {
             return "Please select a value";
-        }
-        return null;
+          }
+          return null;
         },
         onSaved: (value) {
-        formValues['topping'] = value;
+          formValues['gender'] = value;
         },
-        isExpanded: true,
-        items: toppings.map((topping) {
-        return DropdownMenuItem<String>(
-            value: topping,
-            child: Text(
-                topping
-            ));
-        }).toList()
-        ),
-```
-
-The shortcoming of this method is that we are unable to see the selected item when clicking on the menu. To fix this we do the following:
-1. Add the `onChanged()` method such that we update the `formValues` Map everytime the dropdown changes and then we know what was selected last such that we can indicate this when we are building the menu.
-2. The `items` property is built differently for the currently selected item where we supply additional `TextStyle` parameter
-3. Because we do not want to change the builder for the **selected item**, we also define a `selectedItemBuilder` which is a list of `Widget`s.
-
-Hence our `DropdownButtonFormField` becomes:
-```dart
-    DropdownButtonFormField<String>(
-        focusColor: Colors.blue,
-        decoration:
-            const InputDecoration(labelText: "Topping"),
-        value: "Pepperoni",
-        validator: (value) {
-        if (value == null) {
-            return "Please select a value";
-        }
-        return null;
-        },
-        onSaved: (value) {
-        formValues['topping'] = value;
-        },
-        isExpanded: true,
+        // isExpanded: true,
         selectedItemBuilder: (context) {
-        return toppings.map((topping) {
-            return Text(topping);
-        }).toList();
+          return Gender.values.map((gender) {
+            return Text(gender.description);
+          }).toList();
         },
-        items: toppings.map((topping) {
-        return DropdownMenuItem<String>(
-            value: topping,
-            child: Text(
-                topping,
-                style: formValues['topping'] == topping
+        items: Gender.values.map((gender) {
+          return DropdownMenuItem<Gender>(
+              value: gender,
+              child: Text(
+                gender.description,
+                style: formValues['gender'] == gender
                     ? TextStyle(color: Colors.blue)
                     : null,
-            ));
+              ));
         }).toList(),
         onChanged: (value) {
-        setState(() {
-            formValues['topping'] = value;
-        });
+          setState(() {
+            formValues['gender'] = value;
+          });
         }),
 ```
+
+
 
 
