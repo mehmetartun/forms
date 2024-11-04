@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:forms/form_fields/date_form_field.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
     formValues["name"] = "John Doe";
     formValues["topping"] = "Pepperoni";
     formValues["gender"] = Gender.preferNoToSay;
+    formValues["date"] = DateTime(2025);
     super.initState();
   }
 
@@ -155,6 +158,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                 });
                               }),
                           const SizedBox(height: 20),
+                          DateFormField(
+                            initialValue: formValues['date'],
+                            validator: (value) {
+                              if (value == null) {
+                                return "Date cannot be empty";
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              formValues['date'] = value;
+                            },
+                          ),
                           FilledButton(
                             onPressed: () {
                               if (_formKey.currentState?.validate() ?? false) {
@@ -162,8 +177,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
                                   content: Text("name: ${formValues['name']} "
-                                      "topping: ${formValues['topping']} "
-                                      "gender: ${(formValues['gender'] as Gender).description} "),
+                                      "topping: ${formValues['topping']}\n"
+                                      "gender: ${(formValues['gender'] as Gender).description} "
+                                      "date: ${DateFormat.yMd().format(formValues['date'])}"),
                                 ));
                               }
                             },
